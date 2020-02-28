@@ -114,7 +114,7 @@ def requires_auth(f):
 @APP.route("/")
 def HELLO():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * from camps")
+    cur.execute("SELECT * from people")
     mysql.connection.commit()
     data = jsonify(cur.fetchall())
     cur.close()
