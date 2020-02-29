@@ -109,17 +109,42 @@ def requires_auth(f):
                         "description": "Unable to find appropriate key"}, 401)
     return decorated
 
-
-
-@APP.route("/")
-def HELLO():
+def query(sql,options):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * from people")
+    cur.execute(sql,(options))
     mysql.connection.commit()
     data = jsonify(cur.fetchall())
     cur.close()
     return data
+
+
+@APP.route("/")
+def HELLO():
+    return "Greetings!"
+
+
+@APP.route("/api/data",methods=['POST','GET'])
+def post_data():
+    if request.method=="POST":
+        sql = sql = "SELECT u.naam, u.id, u.email,u.organisation_id,o.label \
+        FROM cms_users as u inner join organisations as o on u.organisation_id = o.id WHERE u.email= (%s);"
+        post_data = request.form.to_dict()
+        return query(sql,(post_data['email'],))
+    else:
+        return "Post request expected"
+
+@APP.route("/api/data/orgs")
+def all_orgs():
+    return query("SELECT id, label from organisations",())
 # This doesn't need authentication
+@APP.route("/api/data/camps")
+def all_camps():
+    return query("Select id, name, organisation_id from camps",())
+
+@APP.route("/api/data/users")
+def all_users():
+    return query("SELECT id, name,organisation_id, email from cms_users"())
+
 @APP.route("/api/public")
 @cross_origin(origin = "localhost",headers=["Content-Type", "Authorization"])
 def public():
