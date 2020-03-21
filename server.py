@@ -7,6 +7,7 @@ from flask_cors import cross_origin
 from jose import jwt
 from flask_mysqldb import MySQL
 
+
 AUTH0_DOMAIN = 'YOUR_DOMAIN'
 API_AUDIENCE = "MY AUdience"#YOUR_API_AUDIENCE
 ALGORITHMS = ["RS256"]
@@ -126,7 +127,7 @@ def HELLO():
 @APP.route("/api/data",methods=['POST','GET'])
 def post_data():
     if request.method=="POST":
-        sql = sql = "SELECT u.naam, u.id, u.email,u.organisation_id,o.label \
+        sql = "SELECT u.naam, u.id, u.email,u.organisation_id,o.label \
         FROM cms_users as u inner join organisations as o on u.organisation_id = o.id WHERE u.email= (%s);"
         post_data = request.form.to_dict()
         return query(sql,(post_data['email'],))
@@ -141,9 +142,15 @@ def all_orgs():
 def all_camps():
     return query("Select id, name, organisation_id from camps",())
 
+
+@APP.route("/api/data/tables")
+def all_tables():
+    return query("Show tables",())
+
+
 @APP.route("/api/data/users")
 def all_users():
-    return query("SELECT id, name,organisation_id, email from cms_users"())
+    return query("SELECT id, naam,organisation_id, email from cms_users",())
 
 @APP.route("/api/public")
 @cross_origin(origin = "localhost",headers=["Content-Type", "Authorization"])
@@ -158,3 +165,7 @@ def public():
 def private():
     response = "Hello from a private endpoint! You need to be authenticated to see this."
     return jsonify(message=response)
+
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", debug=True)
