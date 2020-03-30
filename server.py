@@ -128,23 +128,29 @@ def query(sql,options):
 def get_credentials(email,cred_list):
     cred_string = ",".join(cred_list)
     querystring = "SELECT "+cred_string + " from cms_users where email=%s"
-    userdata = query(querystring,["some.admin@boxwise.co"])
+    userdata = query(querystring,[email])
     userdata=userdata.json
     if len(userdata)!=1:
-        return False,"Either the user is not in the database or there are multiple entries"
+        return False,{},"Either the user is not in the database or there are multiple entries"
     credential_dict = dict(zip(cred_list,userdata[0]))
-    return True,credential_dict
-
-def permission(permission_dict):
-    return False
+    return True,"",credential_dict
 
 
 
-@APP.route("/api/somequery")
+@APP.route("/api/BoxAid")
 @cross_origin(origin="localhost", headers=["Content-Type", "Authorization"])
 @requires_auth
-def getcamps():
-    sql = "Select * from camps"
+def get_BoxAid(*args,**kwargs):
+    #Hardcoded example to display BoxAid camps
+    #valid,msg,credentials = get_credentials(kwargs['email'],['organisation_id'])
+    valid,msg,credentials = get_credentials("jane.doe@boxaid.co",['organisation_id'])
+    if not valid:
+        return jsonify(message=msg)
+    authorized = (credentials['organisation_id']==1)
+    if not authorized:
+        response = "You are authenticated but not authorized to access this resource"
+        return jsonify(message=response)
+    sql = "Select * from camps where organisation_id = 1"
     return query(sql,())
 
 @APP.route("/")
@@ -162,10 +168,5 @@ def public():
 @cross_origin(origin="localhost", headers=["Content-Type", "Authorization"])
 @requires_auth
 def private(*args,**kwargs):
-    print(kwargs['email'])
-    print(get_credentials(kwargs['email'],['id','naam','organisation_id','is_admin']))
-    authorized = permission([])
-    if not authorized:
-        response = "You are authenticated but not authorized to access this resource"
-    sys.stdout.flush()
+    response = "Hello from a private endpoint! You need to be authenticated to see this."
     return jsonify(message=response)
