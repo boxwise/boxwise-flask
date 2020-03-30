@@ -1,14 +1,15 @@
 import json
-from six.moves.urllib.request import urlopen
+from six.moves.urllib.request import urlopen,Request
 from functools import wraps
+import sys
 
 from flask import Flask, request, jsonify, _request_ctx_stack
 from flask_cors import cross_origin
 from jose import jwt
 from flask_mysqldb import MySQL
 
-AUTH0_DOMAIN = 'YOUR_DOMAIN'
-API_AUDIENCE = "MY AUdience"#YOUR_API_AUDIENCE
+AUTH0_DOMAIN = 'dev-tgx41z7g.eu.auth0.com'
+API_AUDIENCE = "https://boxwise"#YOUR_API_AUDIENCE
 ALGORITHMS = ["RS256"]
 
 APP = Flask(__name__)
@@ -70,6 +71,13 @@ def requires_auth(f):
         jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
         jwks = json.loads(jsonurl.read())
         unverified_header = jwt.get_unverified_header(token)
+        ###This part modifies the original auth0 documentation to make a request for the email
+        req = Request("https://"+AUTH0_DOMAIN+"/userinfo")
+        req.add_header('Authorization',"Bearer "+ token)
+        user_info = urlopen(req).read()
+        content = json.loads(user_info)
+        kwargs['email']=content['email']
+        ###Standar code resumes
         rsa_key = {}
         for key in jwks["keys"]:
             if key["kid"] == unverified_header["kid"]:
@@ -117,8 +125,24 @@ def query(sql,options):
     cur.close()
     return data
 
+def get_credentials(email,cred_list):
+    cred_string = ",".join(cred_list)
+    querystring = "SELECT "+cred_string + " from cms_users where email=%s"
+    userdata = query(querystring,["some.admin@boxwise.co"])
+    userdata=userdata.json
+    if len(userdata)!=1:
+        return False,"Either the user is not in the database or there are multiple entries"
+    credential_dict = dict(zip(cred_list,userdata[0]))
+    return True,credential_dict
 
-@APP.route("/api/somequery/")
+def permission(permission_dict):
+    return False
+
+
+
+@APP.route("/api/somequery")
+@cross_origin(origin="localhost", headers=["Content-Type", "Authorization"])
+@requires_auth
 def getcamps():
     sql = "Select * from camps"
     return query(sql,())
@@ -137,6 +161,11 @@ def public():
 @APP.route("/api/private")
 @cross_origin(origin="localhost", headers=["Content-Type", "Authorization"])
 @requires_auth
-def private():
-    response = "Hello from a private endpoint! You need to be authenticated to see this."
+def private(*args,**kwargs):
+    print(kwargs['email'])
+    print(get_credentials(kwargs['email'],['id','naam','organisation_id','is_admin']))
+    authorized = permission([])
+    if not authorized:
+        response = "You are authenticated but not authorized to access this resource"
+    sys.stdout.flush()
     return jsonify(message=response)
