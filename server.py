@@ -8,8 +8,8 @@ from flask_cors import cross_origin
 from jose import jwt
 from flask_mysqldb import MySQL
 
-AUTH0_DOMAIN = 'dev-tgx41z7g.eu.auth0.com'
-API_AUDIENCE = "https://boxwise"#YOUR_API_AUDIENCE
+AUTH0_DOMAIN = 'AUTH0_Domain'
+API_AUDIENCE = "#YOUR_API_AUDIENCE"
 ALGORITHMS = ["RS256"]
 
 APP = Flask(__name__)
