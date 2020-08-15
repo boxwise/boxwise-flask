@@ -1,17 +1,16 @@
-from boxwise_flask.db import db
-from boxwise_flask.models import Camps, Cms_Users
+from boxwise_flask.models.models import Camps, Cms_Users
 
 
-def test_all_bases(client):
+def test_all_bases(client, database):
     """example test for graphql endpoint"""
 
-    db.connect_db()
+    database.connect_db()
     Camps.create(id=1, organisation_id=1, name="some text1", currencyname="hello")
     Camps.create(id=2, organisation_id=1, name="some text1", currencyname="hello")
     Camps.create(id=3, organisation_id=1, name="some text1", currencyname="hello")
     Camps.create(id=4, organisation_id=1, name="some text1", currencyname="hello")
     Camps.create(id=5, organisation_id=1, name="some text1", currencyname="hello")
-    db.close_db(None)
+    database.close_db(None)
 
     graph_ql_query_string = """query { \
                 allBases { \
@@ -27,16 +26,16 @@ def test_all_bases(client):
     assert response_data.json["data"]["allBases"][0]["id"] == 1
 
 
-def test_base(client):
+def test_base(client, database):
     """example test for graphql endpoint"""
 
-    db.connect_db()
+    database.connect_db()
     Camps.create(id=1, organisation_id=1, name="some text1", currencyname="hello")
     Camps.create(id=2, organisation_id=1, name="some text1", currencyname="hello")
     Camps.create(id=3, organisation_id=1, name="some text1", currencyname="hello")
     Camps.create(id=4, organisation_id=1, name="some text1", currencyname="hello")
     Camps.create(id=5, organisation_id=1, name="some text1", currencyname="hello")
-    db.close_db(None)
+    database.close_db(None)
 
     graph_ql_query_string = """query Base {
                 base(id: "1") {
@@ -52,10 +51,10 @@ def test_base(client):
     assert response_data.json["data"]["base"]["id"] == 1
 
 
-def test_all_users(client):
+def test_all_users(client, database):
     """example test for graphql endpoint"""
 
-    db.connect_db()
+    database.connect_db()
     Cms_Users.create(
         id=0,
         name="",
@@ -86,7 +85,7 @@ def test_all_users(client):
         lastlogin="",
         lastaction="",
     )
-    db.close_db(None)
+    database.close_db(None)
 
     graph_ql_query_string = """query { \
                 allUsers { \
@@ -102,10 +101,10 @@ def test_all_users(client):
     assert response_data.json["data"]["allUsers"][0]["id"] == 0
 
 
-def test_user(client):
+def test_user(client, database):
     """example test for graphql endpoint"""
 
-    db.connect_db()
+    database.connect_db()
     Cms_Users.create(
         id=0,
         name="",
@@ -136,7 +135,7 @@ def test_user(client):
         lastlogin="",
         lastaction="",
     )
-    db.close_db(None)
+    database.close_db(None)
     matrix_email = '"mr-anderson@matrix.co.uk"'
     graph_ql_query_string = (
         """query User {

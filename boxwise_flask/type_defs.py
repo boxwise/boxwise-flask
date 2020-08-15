@@ -1,7 +1,15 @@
 """GraphQL type definitions"""
 from ariadne import gql
 
-type_defs = gql(
+mutation_defs = gql(
+    """
+    type Mutation {
+        createQRCode: QRCode
+    }
+    """
+)
+
+query_defs = gql(
     """
     type Query {
         hello: String!
@@ -10,14 +18,21 @@ type_defs = gql(
         base(id: String!): Base
         allUsers: [User]
         user(email: String): User
+        createQRCode: QRCode
     }
+    """
+)
+
+type_defs = gql(
+    """
     type Base {
         id: Int
         name: String
         currencyname: String
         organisation_id: Int
     }
-    type User{
+
+    type User {
         id: Int!
         organisation_id: Int
         name: String
@@ -28,6 +43,14 @@ type_defs = gql(
         camp_id: [Int]
         lastlogin: Datetime
         lastaction: Datetime
+    }
+
+    type QRCode {
+        id: Int!
+        Code: String!
+        CreatedOn: Int
+        CreatedBy: String!
+        LastModifiedOn: Int
     }
 
     scalar Datetime

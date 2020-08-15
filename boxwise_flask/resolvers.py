@@ -2,15 +2,18 @@
 from ariadne import (
     ObjectType,
     ScalarType,
+    gql,
     make_executable_schema,
     snake_case_fallback_resolvers,
 )
 
 from .auth_helper import authorization_test
-from .models import Camps, Cms_Users
-from .type_defs import type_defs
+from .models.models import Camps, Cms_Users
+from .models.qr_code import QRCode
+from .type_defs import mutation_defs, query_defs, type_defs
 
 query = ObjectType("Query")
+mutation = ObjectType("Mutation")
 
 datetime_scalar = ScalarType("Datetime")
 date_scalar = ScalarType("Date")
@@ -63,4 +66,14 @@ def resolve_user(_, info, email):
     return response
 
 
-schema = make_executable_schema(type_defs, query, snake_case_fallback_resolvers)
+@mutation.field("createQRCode")
+def resolve_qr_code(_, id):
+    response = QRCode.get_a_code(id)
+    return response
+
+
+schema = make_executable_schema(
+    gql(type_defs + query_defs + mutation_defs),
+    [query, mutation],
+    snake_case_fallback_resolvers,
+)

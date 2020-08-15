@@ -2,7 +2,11 @@
 from peewee import CharField, CompositeKey, DateField, DateTimeField, IntegerField
 from playhouse.shortcuts import model_to_dict
 
-from .db import db
+from ..db import db
+
+
+class UnsignedIntegerField(IntegerField):
+    field_type = "int unsigned"
 
 
 class Person(db.Model):
