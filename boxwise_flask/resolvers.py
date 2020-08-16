@@ -67,9 +67,9 @@ def resolve_user(_, info, email):
 
 
 @mutation.field("createQRCode")
-def resolve_qr_code(_, id):
-    response = QRCode.get_a_code(id)
-    return response
+def resolve_create_qr_code(_, info):
+    qr_code = QRCode.create(code="", created_on="", created_by=1, last_modified_on=1)
+    return qr_code
 
 
 schema = make_executable_schema(

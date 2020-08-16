@@ -5,10 +5,6 @@ from playhouse.shortcuts import model_to_dict
 from ..db import db
 
 
-class UnsignedIntegerField(IntegerField):
-    field_type = "int unsigned"
-
-
 class Person(db.Model):
     id = IntegerField()
     camp_id = IntegerField()
