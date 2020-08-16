@@ -1,4 +1,4 @@
-"""Model definitions for database."""
+"""Model for a qr_code in the database."""
 from peewee import CharField, DateTimeField, IntegerField
 
 from ..db import db

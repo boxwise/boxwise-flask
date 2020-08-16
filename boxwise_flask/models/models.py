@@ -6,7 +6,6 @@ from ..db import db
 
 
 class Person(db.Model):
-    id = IntegerField()
     camp_id = IntegerField()
     firstname = CharField()
     lastname = CharField()
@@ -16,7 +15,6 @@ class Person(db.Model):
 
 
 class Camps(db.Model):
-    id = IntegerField()
     organisation_id = IntegerField()
     name = CharField()
     currencyname = CharField()
@@ -66,7 +64,6 @@ class Cms_Usergroups_Camps(db.Model):
 
 
 class Cms_Users(db.Model):
-    id = IntegerField()
     name = CharField(column_name="naam")
     email = CharField()
     cms_usergroups_id = CharField()

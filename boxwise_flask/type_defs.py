@@ -51,6 +51,11 @@ type_defs = gql(
         CreatedOn: Int
         CreatedBy: String!
         LastModifiedOn: Int
+        Box: Box!
+    }
+
+    type Box {
+        id: Int!
     }
 
     scalar Datetime
