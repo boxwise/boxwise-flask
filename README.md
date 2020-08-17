@@ -95,6 +95,21 @@ Run the test suite on your machine by executing
 
     pytest
 
+Two types of tests can be setup. Model tests and endpoint tests.
+
+New test files should begin with the word test so the they are discovered when running pytest.
+for example:
+```
+test_<test_file_name>.py
+```
+and similarly the test functions should have the format
+```
+def test_<test_name>():
+```
+for endpoint testing, the test functions usually take two fixtures `def test_<test_name>(client, database):` to allow for databases to be preconfigured with data and requests to be made to the app.
+
+fixtures are configured in the `conftest.py` files.
+
 ### Formatting and linting
 
 Run a full style-check by
