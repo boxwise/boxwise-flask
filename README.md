@@ -112,7 +112,7 @@ def test_<test_name>(client, database):
 ``` 
 to allow for databases to be preconfigured with data and requests to be made to the app.
 
-fixtures are configured in the `conftest.py` files.
+fixtures are configured in the `conftest.py` files which execute automatically before a test.
 
 ### Formatting and linting
 
