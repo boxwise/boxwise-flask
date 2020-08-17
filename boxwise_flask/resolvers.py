@@ -1,5 +1,6 @@
 """GraphQL resolver functionality"""
 from ariadne import (
+    MutationType,
     ObjectType,
     ScalarType,
     gql,
@@ -13,7 +14,7 @@ from .models.qr_code import QRCode
 from .type_defs import mutation_defs, query_defs, type_defs
 
 query = ObjectType("Query")
-mutation = ObjectType("Mutation")
+mutation = MutationType()
 
 datetime_scalar = ScalarType("Datetime")
 date_scalar = ScalarType("Date")
