@@ -3,6 +3,8 @@
        <img width="105" height="35" alt="JWT Auth for open source projects" src="https://cdn.auth0.com/oss/badges/a0-badge-dark.png"></a>
 
 # Readme
+**THIS PROJECT WAS ARCHIVED ON OCTOBER 9, 2020. ITS CONTENTS HAVE INCORPORATED INTO THE MONOREPO: [BOXWISE/BOXTRIBUTE](https://github.com/boxwise/boxtribute)**
+
 This is a simple flask app to be used together with the [react-client](https://github.com/boxwise/boxwise-react) for the revamp of [Boxtribute](www.boxtribute.org)
 
 ## Preparation for Installation
